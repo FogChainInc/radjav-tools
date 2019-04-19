@@ -1,0 +1,40 @@
+{
+  "name": "radjav-tools",
+  "version": "1.0.0",
+  "description": "Tools for use with RadJav",
+  "main": "index.js",
+  "bin": {
+    "radjav-tools": "./bin/radjav-tools"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "convert-form": "node index.js --convertFormDesignerToJSON",
+    "build-ipa": "node index.js --buildIPA",
+    "build-apk": "node index.js --buildAPK",
+    "create-project": "node index.js --createProject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FogChainInc/radjav-tools.git"
+  },
+  "keywords": [
+    "javascript",
+    "create-project",
+    "deploy-ios",
+    "deploy-android",
+    "typescript"
+  ],
+  "author": "FogChain, Corp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FogChainInc/radjav-tools/issues"
+  },
+  "homepage": "https://github.com/FogChainInc/radjav-tools#readme",
+  "dependencies": {
+    "@types/node": "^11.13.5",
+    "archiver": "^3.0.0",
+    "radjav-tools-lib": "^1.0.2",
+    "recursive-copy": "^2.0.10"
+  }
+}

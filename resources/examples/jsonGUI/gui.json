@@ -1,0 +1,16 @@
+[
+    {
+        "type": "RadJav.GUI.Button",
+        "name": "button1",
+        "position": "412, 141",
+        "size": "135, 58",
+        "text": "Button"
+    },
+    {
+        "type": "RadJav.GUI.Label",
+        "name": "label1",
+        "position": "118, 205",
+        "size": "48, 20",
+        "text": "Label"
+    }
+]
