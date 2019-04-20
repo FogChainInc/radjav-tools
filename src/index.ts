@@ -10,7 +10,10 @@ interface Command
 	evt: Function;
 }
 
-var helpHeader: string = "RadJav Tools\n";
+var packageStr = fs.readFileSync (path.normalize (__dirname + "/../package.json")).toString ();
+var packageJSON = JSON.parse (packageStr);
+
+var helpHeader: string = `RadJav Tools - v${packageJSON.version}\n`;
 helpHeader += "Copyright(c) 2019, FogChain, Corp.\n";
 helpHeader += "Under the MIT License\n\n";
 
@@ -31,14 +34,39 @@ function getCommand (cmdList: Command[], cmdName: string): Command
 
 var commands: Command[] = [
 	{
+		cmd: ["http", "h"],
+		desc: "Start a HTTP to test the HTML5 app.",
+		help: "",
+		evt: function (args: string[])
+			{
+				let hostFolder = process.cwd ();
+				let port = 3453;
+				let listenAddr = "127.0.0.1";
+
+				if (args.length > 0)
+					hostFolder = path.normalize (args[0]);
+
+				if (args.length > 1)
+					port = parseInt (args[1]);
+
+				if (args.length > 2)
+					listenAddr = args[2];
+
+				RadJavTools.startHTTP (hostFolder, port, listenAddr).then (function (conn)
+					{
+						console.log (`Hosting RadJav App at http://${conn.listenAddr}:${conn.port}`);
+					});
+			}
+	}, 
+	{
 		cmd: ["createProject", "p"],
 		desc: "Create a project.",
 		help: "",
 		evt: function (args: string[])
 			{
 				let appFolder = path.normalize (args[0]);
-				let radJavBuildDir = path.normalize (__dirname + "/RadJav");
-				let dependenciesDir = path.normalize (__dirname + "/dependencies");
+				let radJavBuildDir = path.normalize (__dirname + "/../resources/RadJav");
+				let dependenciesDir = path.normalize (__dirname + "/../resources/dependencies");
 				let examplesDir = path.normalize (__dirname + "/../../../examples");
 
 				if (fs.existsSync (examplesDir) == true)
@@ -47,7 +75,7 @@ var commands: Command[] = [
 					dependenciesDir = path.normalize (__dirname + "/../../../html5/dependencies");
 				}
 				else
-					examplesDir = path.normalize (__dirname + "/examples");
+					examplesDir = path.normalize (__dirname + "/../resources/examples");
 
 				if (args.length > 1)
 					radJavBuildDir = path.normalize (args[1]);
@@ -58,7 +86,9 @@ var commands: Command[] = [
 				if (args.length > 3)
 					examplesDir = path.normalize (args[3]);
 
-				RadJavTools.createProject (appFolder, radJavBuildDir, dependenciesDir, examplesDir);
+				RadJavTools.createProject (appFolder, radJavBuildDir, 
+					dependenciesDir, examplesDir, 
+					path.normalize (__dirname + "/../resources/RadJavApp.htm"));
 			}
 	},
 	{

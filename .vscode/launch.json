@@ -9,7 +9,7 @@
 			"request": "launch",
 			"name": "Launch Program",
 			"program": "${workspaceFolder}/build/index.js",
-			"args": []
+			"args": ["--http", "C:\\editing\\projects\\RadJavPrivate\\tools\\RadJavApp"]
 		}
 	]
 }

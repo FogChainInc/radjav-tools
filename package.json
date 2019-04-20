@@ -1,6 +1,6 @@
 {
   "name": "radjav-tools",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "Tools for use with RadJav",
   "main": "index.js",
   "bin": {
