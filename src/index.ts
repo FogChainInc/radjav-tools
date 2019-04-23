@@ -16,6 +16,8 @@ var packageJSON = JSON.parse (packageStr);
 var helpHeader: string = `RadJav Tools - v${packageJSON.version}\n`;
 helpHeader += "Copyright(c) 2019, FogChain, Corp.\n";
 helpHeader += "Under the MIT License\n\n";
+helpHeader += "For usage information type --help followed by the item to get help with.\n";
+helpHeader += "Example: radjav-tools --help --createProject.\n\n";
 
 function getCommand (cmdList: Command[], cmdName: string): Command
 {
@@ -36,7 +38,7 @@ var commands: Command[] = [
 	{
 		cmd: ["http", "h"],
 		desc: "Start a HTTP to test the HTML5 app.",
-		help: "",
+		help: "Usage: radjav-tools --http [host folder] [port] [listen address]",
 		evt: function (args: string[])
 			{
 				let hostFolder = process.cwd ();
@@ -57,11 +59,11 @@ var commands: Command[] = [
 						console.log (`Hosting RadJav App at http://${conn.listenAddr}:${conn.port}`);
 					});
 			}
-	}, 
+	},
 	{
 		cmd: ["createProject", "p"],
 		desc: "Create a project.",
-		help: "",
+		help: "Usage: radjav-tools --createProject project_folder_path [RadJav directory] [Dependencies directory] [Examples directory]",
 		evt: function (args: string[])
 			{
 				let appFolder = path.normalize (args[0]);
@@ -82,19 +84,19 @@ var commands: Command[] = [
 
 				if (args.length > 2)
 					dependenciesDir = path.normalize (args[2]);
-	
+
 				if (args.length > 3)
 					examplesDir = path.normalize (args[3]);
 
-				RadJavTools.createProject (appFolder, radJavBuildDir, 
-					dependenciesDir, examplesDir, 
+				RadJavTools.createProject (appFolder, radJavBuildDir,
+					dependenciesDir, examplesDir,
 					path.normalize (__dirname + "/../resources/RadJavApp.htm"));
 			}
 	},
 	{
 		cmd: ["buildIPA", "i"],
 		desc: "Build an iOS IPA from a selected folder.",
-		help: "",
+		help: "Usage: radjav-tools --buildIPA App_folder_to_build [Custom file name] [iOS binary path]",
 		evt: function (args: string[])
 			{
 				let appFolder: string = path.normalize (args[0]);
@@ -113,7 +115,7 @@ var commands: Command[] = [
 	{
 		cmd: ["buildAPK", "a"],
 		desc: "Build an Android APK from a selected folder.",
-		help: "",
+		help: "Usage: radjav-tools --buildAPK App_folder_to_build [Custom file name] [Android SDK path] [jarsigner path] [APK binary path]",
 		evt: function (args: string[])
 			{
 				let appFolder: string = path.normalize (args[0]);
@@ -140,7 +142,7 @@ var commands: Command[] = [
 	{
 		cmd: ["convertFormDesignerToJSON", "c"],
 		desc: "Convert Visual Studio's form designer output to RadJav's GUI JSON. Can either be a .cs or .vb file.",
-		help: "",
+		help: "Usage: radjav-tools --convertFormDesignerToJSON Form_designer_file_path Output_JSON_file_path",
 		evt: function (args: string[])
 			{
 				let file: string = "";
@@ -160,25 +162,42 @@ var commands: Command[] = [
 			}
 	},
 	{
+		cmd: ["version", "v"],
+		desc: "version",
+		help: "",
+		evt: function (args: string[])
+			{
+				console.log (`v${packageJSON.version}`);
+			}
+	},
+	{
 		cmd: ["help", "h"],
 		desc: "Help",
 		help: "",
 		evt: function (args: string[])
 			{
-				let str = helpHeader;
+				let str: string = helpHeader;
+				let helpItem: string = "";
 
-				commands.forEach (function (val, index)
+				if (args.length > 0)
+					helpItem = args[0];
+
+				commands.forEach (function (val: Command, index: number)
 					{
 						let line = "  ";
 						let spaces = "";
 						let maxSpaces = 4;
+						let foundCommand = "";
 
 						for (let iIdx = 0; iIdx < val.cmd.length; iIdx++)
 						{
 							let cmd = val.cmd[iIdx];
 
 							if (iIdx == 0)
+							{
+								foundCommand = "--" + cmd;
 								line += "--" + cmd;
+							}
 
 							if (iIdx == 1)
 								line += ", -" + cmd;
@@ -191,7 +210,14 @@ var commands: Command[] = [
 							spaces += " ";
 
 						line += spaces + val.desc;
-						str += line + "\n";
+
+						if (helpItem === "")
+							str += line + "\n";
+						else
+						{
+							if (helpItem === foundCommand)
+								str += val.help + "\n";
+						}
 					});
 
 				console.log (str);
@@ -230,5 +256,5 @@ if (execFunc != null)
 else
 {
 	let helpCmd: Command = getCommand (commands, "help");
-	helpCmd.evt ();
+	helpCmd.evt (args);
 }
